@@ -92,6 +92,7 @@ extern crate lazy_static;
 extern crate log;
 extern crate memchr;
 extern crate pulldown_cmark;
+extern crate pulldown_cmark_to_cmark;
 extern crate regex;
 extern crate serde;
 #[macro_use]

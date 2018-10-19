@@ -2,9 +2,11 @@
 
 pub use self::index::IndexPreprocessor;
 pub use self::links::LinkPreprocessor;
+pub use self::scala_wrapper::ScalaWrapperPreprocessor;
 
 mod index;
 mod links;
+mod scala_wrapper;
 
 use book::Book;
 use config::Config;
