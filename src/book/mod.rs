@@ -20,7 +20,10 @@ use tempfile::Builder as TempFileBuilder;
 use toml::Value;
 
 use errors::*;
-use preprocess::{IndexPreprocessor, LinkPreprocessor, Preprocessor, PreprocessorContext};
+use preprocess::{
+    IndexPreprocessor, LinkPreprocessor, Preprocessor, PreprocessorContext,
+    ScalaWrapperPreprocessor,
+};
 use renderer::{CmdRenderer, HtmlHandlebars, RenderContext, Renderer};
 use utils;
 
@@ -327,6 +330,7 @@ fn default_preprocessors() -> Vec<Box<Preprocessor>> {
     vec![
         Box::new(LinkPreprocessor::new()),
         Box::new(IndexPreprocessor::new()),
+        Box::new(ScalaWrapperPreprocessor::new()),
     ]
 }
 
@@ -346,6 +350,7 @@ fn determine_preprocessors(config: &Config) -> Result<Vec<Box<Preprocessor>>> {
         match key.as_ref() {
             "links" => preprocessors.push(Box::new(LinkPreprocessor::new())),
             "index" => preprocessors.push(Box::new(IndexPreprocessor::new())),
+            "scala-wrapper" => preprocessors.push(Box::new(ScalaWrapperPreprocessor::new())),
             _ => bail!("{:?} is not a recognised preprocessor", key),
         }
     }
