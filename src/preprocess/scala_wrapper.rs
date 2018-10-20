@@ -24,6 +24,7 @@ impl ScalaWrapperPreprocessor {
     fn remove_wrappers(&self, chapter: &mut Chapter) -> Result<String> {
         let wrapper_start = Regex::new(r"object wrapper.*\{").unwrap();
         let wrapper_end = Regex::new(r"^\}").unwrap();
+        let wrapper_import = Regex::new(r"^\s*import wrapper").unwrap();
         let mut buf = String::with_capacity(chapter.content.len());
         let mut state: State = State::OutsideScala;
 
@@ -51,12 +52,20 @@ impl ScalaWrapperPreprocessor {
                 State::InsideWrapped => {
                     if wrapper_end.is_match(&content) {
                         None
+                    } else if wrapper_import.is_match(&content) {
+                        None
                     } else {
                         Some(Event::Text(content))
                     }
                 }
 
-                State::InsideUnwrapped => Some(Event::Text(content)),
+                State::InsideUnwrapped => {
+                    if wrapper_import.is_match(&content) {
+                        None
+                    } else {
+                        Some(Event::Text(content))
+                    }
+                }
             },
 
             Event::End(Tag::CodeBlock(_)) => {
